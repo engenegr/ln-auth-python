@@ -6,7 +6,7 @@ from flask import jsonify
 import pyqrcode
 import secrets
 
-from bech import encode_string
+from bech32 import bech32_encode, convertbits
 from der import decode_signature
 
 from ecc import elliptic_curve
@@ -51,7 +51,8 @@ def auth_challenge():
     challenges.append(k1)
 
     #bech32 encode string
-    bech_32_url = encode_string(url)
+    bech32_data = convertbits(url.encode("utf-8"), 8, 5, True)
+    bech_32_url = bech32_encode("lnurl", bech32_data)
 
     #save as url code and send
     qr = pyqrcode.create(bech_32_url)
